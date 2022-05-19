@@ -1,75 +1,86 @@
 const Header = (props) => {
 
+  console.log(props)
+
+  const course = props.courseInfo;
+
   return (
 <div>
-  <p> <h1> {props.coursename} </h1> </p>
+   <h1> {course.name} </h1> 
 </div>
 
   )
 }
 
-const Part = (props) => {
 
-return (
-
-  <div>
-
-    <p> {props.partname} {props.partnumber}
-
-    </p>
-  </div>
-)
-
-}
 
 const Content = (props) => {
 
+const partsMap = props.parts;
+  console.log(props)
 
+const showParts = partsMap.map((value,index) =>
+  
+  <div key = {value.name + index}> <p> {value.name} {value.exercises} </p>
+  
+</div>
+)
+
+return (
+  <div> 
+{showParts}
+</div>
+)
+
+}
+const Total = (props) => {
+
+const partsMap = props.parts;
+var total = partsMap.reduce((accum,item) => accum + item.exercises, 0)
 return (
 
 <div>
 
-<Part partname = {props.partname1} partnumber = {props.partnumber1}/>
-<Part partname = {props.partname2} partnumber = {props.partnumber2}/>
-<Part partname = {props.partname3} partnumber = {props.partnumber3}/>
+<p> Total: {total}</p>
 
 </div>
 
 )
 
-}
-
-const Total = (props) => {
-
-return(
-
-<div>
-
-  <p>
-    Number of exercises {props.total}
-  </p>
-</div>
-
-)
 
 }
 
 const App = () => {
-  const course = 'Half Stack application development'
-  const part1 = 'Fundamentals of React'
-  const exercises1 = 10
-  const part2 = 'Using props to pass data'
-  const exercises2 = 7
-  const part3 = 'State of a component'
-  const exercises3 = 14
+  const course = {
+    name: 'Half Stack application development',
+    parts: [
+      {
+        name: 'Fundamentals of React',
+        exercises: 10
+      },
+      {
+        name: 'Using props to pass data',
+        exercises: 7
+      },
+      {
+        name: 'State of a component',
+        exercises: 14
+      }
+    ]
+  }
+  
 
   return (
+   
     <div>
-      <Header coursename = {course} />
-      <Content partname1 = {part1} partname2= {part2} partname3 = {part3} partnumber1 = {exercises1} partnumber2 = {exercises2} partnumber3 = {exercises3}/>
-     <Total total = {exercises1 + exercises2 + exercises3}/>
+
+      <Header courseInfo = {course} />
+    <Content parts={course.parts}/>
+    <Total parts = {course.parts}/>
     </div>
-  )
+    
+  );
+  
 }
 
 export default App
