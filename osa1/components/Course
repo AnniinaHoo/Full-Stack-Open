@@ -1,0 +1,61 @@
+const Course = (props) => {
+
+    console.log(props);
+  return (
+  
+    <div>
+    <Content course= {props.course} />
+  
+    
+    </div>
+    ); }
+  
+  const Content = (props) => {
+  
+    console.log("header props", props)
+  
+     
+      return (
+        <div>
+          {
+            props.course.map(({name, parts}, i) => (
+              <div key={i} >
+                  <h2>{name}</h2>
+                  <Parts parts = {parts}/> 
+                  <Total parts = {parts}/>
+                </div> 
+              
+            ))
+            
+          }
+        </div>
+      );
+    }
+  
+  const Parts = (props) => {
+  
+    return (
+    props.parts.map((part, j) => <p key={j}>{part.name} {part.exercises} 
+    </p> 
+     )
+    );
+  
+  
+  }
+  
+  
+  const Total = (props) => {
+  
+  console.log ("props total", props);
+  
+  var total = props.parts.reduce((accum,item) => accum + item.exercises, 0)
+  return (
+  
+  <div>
+  
+  <p> <b>Total of {total} exercises</b></p>
+  
+  </div>);
+  }
+
+  export default Course
