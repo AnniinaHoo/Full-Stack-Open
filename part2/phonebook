@@ -1,0 +1,131 @@
+import { useState } from 'react'
+
+const Names = ({person}) => {
+
+
+  return (
+    <p>{person.name} {person.number}</p>
+  )
+
+}
+
+const Filter = ({type,value, onChange}) => {
+  return(
+
+    <div>
+filter: <input type={type} value={value} onChange={onChange}/>
+</div>
+  )
+}
+
+const PersonForm = ({addNew, nameValue, numberValue,  type, setNewName, setNewNumber}) => {
+
+  return (
+  
+  <form onSubmit={addNew}><div>
+      
+      name: <input value={nameValue} onChange={event => setNewName(event.target.value)}/>
+      </div>
+     
+      <div>number: <input value={numberValue} onChange={event => setNewNumber (event.target.value)}/></div>
+      <div>
+    
+      <button type={type}>add</button>
+      </div>
+    
+  </form>
+    )
+}
+
+const Persons = (props) => {
+
+return(
+  <div>
+{props.results.map(person => <Names key={person.id} person={person} />
+)}
+</div>
+)}
+
+const App = () => {
+  const [persons, setPersons] = useState([
+    { name: 'Arto Hellas' , 
+    number: '040 503 6986'}
+  ]) 
+  const [newName, setNewName] = useState('')
+  const [newNumber, setNewNumber] = useState('')
+  const [filteredValue, setFilteredValue] = useState('')
+  const [filteredResults, setFilteredResults] = useState(persons)
+
+  
+
+ 
+  const addName = (event) => {
+    event.preventDefault()
+    const nameObject = {
+      name: newName,
+      number: newNumber
+    }
+    if(persons.some(person => person.name === newName)){
+      alert(`${newName} is already added to phonebook`);
+
+    } else {
+  
+    setPersons(persons.concat(nameObject))
+    setFilteredResults(persons.concat(nameObject))
+    setNewName('')
+    setNewNumber('')
+    console.log('button clicked', event.target)
+    }   }
+
+
+  const handleSearch = (event) => {
+    console.log(event.target.value)
+    setFilteredValue(event.target.value)
+
+    const searchResults = persons.filter((item) => {
+      return item.name.toLowerCase().indexOf(event.target.value.toLowerCase()) !== -1;
+    });
+   
+    setFilteredResults(searchResults);
+    console.log(filteredResults, "Filtered results");
+    console.log(persons, "persons");
+  };
+  
+
+
+
+  return (
+    <div>
+      <h2>Phonebook</h2>
+
+<form>
+
+<div>
+
+<Filter type="text" value={filteredValue} onChange={handleSearch}/>
+
+
+
+</div>
+
+</form>
+
+
+
+      <h2>Add a new</h2>
+     
+     <PersonForm addNew={addName} nameValue={newName} numberValue={newNumber} type="submit" setNewName={setNewName} setNewNumber={setNewNumber}/>
+     
+      
+      <h2>Numbers</h2>
+      
+<Persons results={filteredResults}/>
+      
+  </div>
+  )
+
+      }
+
+      // Seuraavaksi osa 2 C
+
+export default App
