@@ -1,0 +1,131 @@
+import { useState, useEffect } from 'react'
+import axios from 'axios'
+import Note from './components/Note'
+
+const Names = ({country}) => {
+
+  return (
+    <div>{country.name.common} 
+    
+    </div>)
+    
+}
+
+
+const Languages = ({country}) => {
+
+
+  return (
+    <div>{country.languages}</div>
+  )
+  
+}
+
+const Filter = ({type,value, onChange}) => {
+  return(
+
+    <div>
+find countries <input type={type} value={value} onChange={onChange}/>
+</div>
+  )
+}
+
+const Countries = (props) => {
+
+  
+
+  if (props.length>10) {
+    return (
+  <div>Too many matches, specify another filter</div>
+    )
+  } 
+  
+  if (props.length === 1) 
+  
+ 
+  {  console.log(props.results[0].languages)
+    
+return (
+  
+  <div> <h1>{props.results[0].name.common} </h1><p>Capital {props.results[0].capital} <br></br>
+  Area {props.results[0].area} </p><p><b>Languages</b></p> 
+  
+  {Object.values(props.results[0].languages).map((value,index) => { 
+    return (
+    
+    <div key={index}>
+      <li>{value}</li>
+      
+      </div>); })}
+
+      <div><p></p><img src={props.results[0].flags.png} alt="Flag image" height={200} width={200}/></div>
+  </div>
+);
+
+  }
+    
+    
+    else {
+  return(
+    <div>
+  {props.results.map((country) => <Names key={country.id} country={country} filteredValue={props.filteredValue}/>
+  )}
+  </div>
+  )}}
+
+const App = () => {
+  const [countries, setCountry] = useState([])
+  const [length, setLength] = useState(0)
+  const [showAll, setShowAll] = useState(true)
+  const [filteredValue, setFilteredValue] = useState('')
+  const [filteredResults, setFilteredResults] = useState(countries)
+
+  const hook = () => {
+    console.log('effect')
+    axios
+      .get('https://restcountries.com/v3.1/all')
+      .then(response => {
+        console.log('promise fulfilled')
+        setCountry(response.data)
+        console.log(response)
+        
+        
+      })
+  }
+
+  const handleSearch = (e) => {
+
+
+    const results = countries.filter(country => {
+      if (e.target.value === "") return countries
+      return country.name.common.toLowerCase().includes(e.target.value.toLowerCase())
+  })
+setFilteredValue(e.target.value)
+setFilteredResults(results);
+setLength(results.length)
+    
+
+    console.log(filteredResults, "Filtered results");
+    console.log(filteredValue, "Filtered value");
+    console.log(countries, "countries");
+    console.log(length, "length")
+  };
+
+
+  
+  useEffect(hook, [])
+
+ return (
+
+  <div>
+
+  <form>
+<Filter type="text" onChange={handleSearch} value={filteredValue}/>
+</form> <div>
+<Countries results={filteredResults} length={length} filteredValue={filteredValue}/>
+</div> </div>
+
+ )
+}
+
+export default App
